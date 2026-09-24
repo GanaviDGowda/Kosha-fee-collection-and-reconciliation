@@ -6,7 +6,7 @@ succeed, fail or time out, and a daily settlement file from the gateway is recon
 was recorded. Every rupee is traceable: the ledger is append-only, every change is one database
 transaction, and every action lands in the audit log.
 
-- **Live demo:** `[Ganavi D Gowda: add the Vercel URL]`
+- **Live demo:** `https://kosha-fee-collection-and-reconcilia.vercel.app/`
 - **Repository:** `[Ganavi D Gowda: add the repository URL]`
 - **Documentation (PDF):** [`docs/Kosha_Documentation.pdf`](docs/Kosha_Documentation.pdf) · short version: [`docs/APPROACH.md`](docs/APPROACH.md)
 
