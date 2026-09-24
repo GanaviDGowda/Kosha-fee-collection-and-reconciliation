@@ -8,7 +8,7 @@ transaction, and every action lands in the audit log.
 
 - **Live demo:** `https://kosha-fee-collection-and-reconcilia.vercel.app/`
 - **Repository:** `[Ganavi D Gowda: add the repository URL]`
-- **Documentation (PDF):** [`docs/Kosha_Documentation.pdf`](docs/Kosha_Documentation.pdf) · short version: [`docs/APPROACH.md`](docs/APPROACH.md)
+- **Documentation:** [`submission_deliverable.md`](submission_deliverable.md)
 
 Built for Edumerge Solutions, Assignment 2: Fee Collection & Reconciliation.
 
@@ -134,7 +134,8 @@ lib/
 supabase/migrations/     001_schema.sql, 002_functions.sql, 003_seed.sql
 scripts/                 db-setup, verify-ledger.sql, sample CSV
 tests/                   unit, integration
-docs/                    documentation source, APPROACH.md
+docs/                    assets and generated screenshots
+submission_deliverable.md final assignment write-up
 ```
 
 ## Deploying to Vercel
