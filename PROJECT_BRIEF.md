@@ -15,9 +15,7 @@ Read this whole brief before writing code. Work in the phases below, in order. A
 - The database is the source of truth for all money rules. Every money-changing operation is a **single PostgreSQL function** (plpgsql) called via `supabase.rpc`, so it runs in one transaction.
 - `SUPABASE_SERVICE_ROLE_KEY` is used **server-side only** (route handlers / server components). Never import it into client code.
 - Validate every API input with `zod` at the route boundary, and again with DB constraints.
-- Keep an **`AI_LOG.md`** at the repo root. Every time your own output turns out to be wrong (failed test, type error, wrong SQL, visual bug found in a screenshot, a rule violated), append an entry: what was generated, what was wrong, how it was detected, how it was fixed. Be factual. Never invent entries. This feeds the mandatory AI Usage Report.
-- Prefer boring, readable code over clever code. The candidate must be able to explain every file in an interview.
-- Ask me before: deleting files outside this repo, changing the stack, or running anything against a database other than the one in `.env.local`.
+- Ask me before: deleting files in this repo, changing the stack, or running anything against a database other than the one in `.env.local`.
 
 ---
 
@@ -177,8 +175,6 @@ Status is always shown as **dot + text label** (never color alone), on a tint of
 ### Don'ts
 No gradients or glassmorphism, no identical rounded cards with the same soft shadow everywhere, no ALL-CAPS eyebrow labels above headings, no "→" appended to buttons, no emoji in the UI, no dark mode (out of scope), no lorem ipsum.
 
-### Self-review
-After building each screen, run the app, take Playwright screenshots at 1440px and 390px into `docs/assets/screens/`, look at them, and fix alignment, spacing, and overflow issues before moving on. Log real problems you found in `AI_LOG.md`.
 
 ---
 
@@ -196,53 +192,6 @@ After building each screen, run the app, take Playwright screenshots at 1440px a
 
 ---
 
-## 6. PDF documentation (Phase 7)
 
-Build it as an HTML document with print CSS and render it with Playwright, so it's reproducible:
-- Source: `docs/src/documentation.html` + `docs/src/print.css`.
-- `scripts/screenshots.ts`: starts from a running app, resets demo data, captures fresh screenshots of the key screens at 1440px.
-- `scripts/build-pdf.ts`: opens the HTML in Chromium, waits for fonts and all Mermaid diagrams to finish rendering, then `page.pdf({ format: 'A4', printBackground: true, displayHeaderFooter: true })` with a small footer: "Kosha: Fee Collection & Reconciliation" left, "Page X of Y" right.
-- `npm run docs:pdf` runs both.
 
-### Look
-- Pure white pages, `--ink` text, one accent (`#2754C5`) used sparingly for links and diagram highlights, thin `#E3E6EC` rules.
-- IBM Plex Serif for the document title and section headings, IBM Plex Sans for body at 10.5pt with 1.5 line height, IBM Plex Mono for code and table names. Generous margins (22mm), body line length under about 80 characters, figures and tables numbered with captions.
-- Cover page: product name, one-line description, "Assignment 2: Fee Collection & Reconciliation", candidate name **Ganavi D Gowda**, date, links to the live demo and repo (placeholders I will fill in). No decorative graphics.
-- Clickable table of contents. Page breaks before each major section. Tables with light header rows (`#F5F6F8`) and no heavy borders.
 
-### Diagrams (Mermaid, `theme: 'base'`, light professional palette)
-Use these `themeVariables`: `background: '#FFFFFF'`, `primaryColor: '#F4F7FD'`, `primaryBorderColor: '#C9D5F2'`, `primaryTextColor: '#16213A'`, `lineColor: '#8A93A6'`, `secondaryColor: '#F1F8F5'`, `tertiaryColor: '#FBF6EC'`, `fontFamily: 'IBM Plex Sans'`, `fontSize: '13px'`. Use soft tints only (light blue for system parts, light green for success paths, light amber for pending, light rose for failure). No saturated fills.
-1. System architecture: browser, Next.js on Vercel (UI, route handlers, domain layer), Supabase Postgres (tables, views, functions, triggers).
-2. ER diagram of all tables.
-3. Payment state machine (`stateDiagram-v2`).
-4. Record-payment sequence diagram: idempotency check, row lock, allocation, ledger write, receipt, audit, in one transaction.
-5. Reconciliation flowchart: upload, validate, match, four buckets, resolution.
-
-### Contents (target 12 to 16 pages)
-1. Summary: the problem, what was built, the three decisions that matter most (append-only ledger, DB-level transactions, reconciliation as a first-class flow).
-2. Problem understanding: who the users are and what really goes wrong with fee collection (lost payments, double charges, pending states, disputes, audit questions).
-3. Assumptions: a numbered list with the reason for each (simulated roles, INR only, mock gateway, one institution, etc.).
-4. Architecture: diagram 1 and why this stack (one codebase, managed Postgres, one-click deploy).
-5. Data model: diagram 2 and why money is stored in paise and the ledger is append-only.
-6. Payment lifecycle: diagrams 3 and 4, idempotency, locking, allocation rules.
-7. Reconciliation: diagram 5 and each bucket explained with a real example from the sample file.
-8. Engineering decisions and trade-offs: a table with columns Decision, Alternative considered, Why this choice, Cost.
-9. Edge cases and how each is handled: a table covering double submit, partial payment, overpayment, concession after partial payment, reversal of allocated payment, stuck pending, amount mismatch, duplicate refs in CSV, malformed CSV rows, parallel payments, illegal state transitions, zero/negative amounts.
-10. Validation and testing: what the unit, integration, and E2E tests cover, plus the ledger verification script, with the real test output summary.
-11. Product walkthrough: annotated screenshots of the key screens with one or two sentences each.
-12. Limitations and future work.
-13. AI usage report: follow the exact headings from the assignment form (AI tool used; what I asked AI to do; most useful prompt; code generated by AI; code I modified; AI output that was wrong; how I identified the problem; how I fixed it). Draft it **only from real entries in `AI_LOG.md`**. Wherever it needs the candidate's own judgment or words, leave a clearly highlighted placeholder like `[Ganavi D Gowda: confirm / add your own words]`. Do not fabricate.
-
-Also write a matching `docs/APPROACH.md` (about one page) for the email body.
-
-Definition of done: open the PDF, check every page renders (no clipped diagrams, no orphaned headings, no overflowing tables), fix issues, and report the page count.
-
----
-
-## 7. Final deliverables checklist
-- [ ] Repo with clear README: what it is, live demo link, 5-minute demo script using the scenario students, setup steps (`npm i`, `.env.local`, `npm run db:setup`, `npm run dev`), scripts, tests, project structure.
-- [ ] `.env.example` with `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`.
-- [ ] `docs/Kosha_Documentation.pdf`, `docs/APPROACH.md`, `AI_LOG.md`.
-- [ ] All checks green: typecheck, lint, unit, integration, e2e, build.
-
-Start with Phase 1 now.

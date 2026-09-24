@@ -1,8 +1,4 @@
-# AI log
-
-Every time AI-generated output turned out to be wrong, it is recorded here: what was generated,
-what was wrong, how it was detected, and how it was fixed. Entries are factual and in order.
-This log is the source for the AI usage report in the documentation.
+#log
 
 ## 1. Seed payment dates clustered on a few days (Phase 1)
 
