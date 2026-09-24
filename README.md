@@ -89,10 +89,8 @@ schema) and reapplies everything. The same reset is available in the app for adm
 | `npm run lint` | ESLint, zero warnings allowed |
 | `npm test` | All Vitest tests: unit, plus integration against the database (skipped if `.env.local` is missing) |
 | `npm run test:unit` / `test:integration` | One suite only |
-| `npm run e2e` | Playwright end-to-end smoke tests (starts `npm run dev` if nothing is running on port 3000) |
 | `npm run db:setup` / `db:reset` / `db:verify` | Apply migrations / drop and reapply / run [`scripts/verify-ledger.sql`](scripts/verify-ledger.sql) |
 | `npm run db:sample` | Regenerate `public/samples/settlement_sample.csv` from freshly seeded data |
-| `npm run docs:pdf` | Capture fresh screenshots and build `docs/Kosha_Documentation.pdf` (needs the app running) |
 
 ## Tests
 
@@ -105,8 +103,6 @@ schema) and reapplies everything. The same reset is available in the app for adm
   two confirms racing post one entry; reversing reopens the installment; a concession above what is
   owed is rejected; six parallel payments on one student allocate correctly; the API role cannot
   write the ledger directly; `verify-ledger.sql` passes afterwards.
-- **End to end** (`tests/e2e`, 3 tests): record a cash payment; an online payment times out and a
-  settlement file resolves it; an admin reverses a payment (an accountant cannot).
 - **Ledger verification** (`npm run db:verify`): nine invariants, including balance = SUM(ledger)
   for every student, allocations never exceed demand, and the ledger rejecting UPDATE and DELETE.
 
@@ -136,9 +132,9 @@ lib/
   auth/                  permission matrix, role cookie, page guards
   money.ts, dates.ts     paise formatting and parsing, IST dates
 supabase/migrations/     001_schema.sql, 002_functions.sql, 003_seed.sql
-scripts/                 db-setup, verify-ledger.sql, sample CSV, screenshots, PDF build
-tests/                   unit, integration, e2e
-docs/                    documentation source, PDF, APPROACH.md, screenshots
+scripts/                 db-setup, verify-ledger.sql, sample CSV
+tests/                   unit, integration
+docs/                    documentation source, APPROACH.md
 ```
 
 ## Deploying to Vercel
@@ -164,4 +160,4 @@ institutions, email/SMS, partial refunds.
 ## AI usage
 
 This project was built with an AI coding assistant. Every time its output was wrong, the mistake,
-how it was found and how it was fixed is recorded in [`AI_LOG.md`](AI_LOG.md).
+how it was found and how it was fixed is recorded in [`LOG.md`](LOG.md).
